@@ -7,5 +7,5 @@ dataYear: the year of data collected
 bornYear: the year of respondents was born
 age: respondents' age in 2018
 gender: respondent's sex assigned at birth (0=female, 1=male)
-depressFrequency: the frequency of feeling depressed (1=never, 2=seldom, 3=sometimes, 4=often, 5=always)
-SWB: subjective well-being (1=very unhappy, 2=unhappy, 3=so-so, 4=happy, 5=very happy)
+depressFrequency: the frequency of feeling depressed (1=never/"从不", 2=seldom“很少”, 3=sometimes/“有时”, 4=often/“经常”, 5=always/“总是”)
+SWB: subjective well-being (1=very unhappy/“非常不幸福”, 2=unhappy/“比较不幸福”, 3=so-so/“说不上幸福不幸福”, 4=happy/“比较幸福”, 5=very happy“非常幸福”)
