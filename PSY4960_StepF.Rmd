@@ -1,0 +1,108 @@
+---
+title: "PSY4960_StepF"
+author: "Yangchenchen Liu"
+date: "2022-12-03"
+output: html_document
+---
+
+1 Data Import
+```{r}
+UROP2018Dat <- read.csv("UROP2018Dat.csv")
+summary(UROP2018Dat)
+```
+
+2 Data Clean
+```{r}
+# depressFrequency: categorical variable to numeric variable
+UROP2018Dat$depressFrequency[UROP2018Dat$depressFrequency=="总是"] <- 5
+UROP2018Dat$depressFrequency[UROP2018Dat$depressFrequency=="经常"] <- 4
+UROP2018Dat$depressFrequency[UROP2018Dat$depressFrequency=="有时"] <- 3
+UROP2018Dat$depressFrequency[UROP2018Dat$depressFrequency=="很少"] <- 2
+UROP2018Dat$depressFrequency[UROP2018Dat$depressFrequency=="从不"] <- 1
+UROP2018Dat$depressFrequency[UROP2018Dat$depressFrequency=="拒绝回答"] <- NA
+
+# SWB: categorical variable to numeric variable
+UROP2018Dat$SWB[UROP2018Dat$SWB=="非常不幸福"] <- 1
+UROP2018Dat$SWB[UROP2018Dat$SWB=="比较不幸福"] <- 2
+UROP2018Dat$SWB[UROP2018Dat$SWB=="说不上幸福不幸福"] <- 3
+UROP2018Dat$SWB[UROP2018Dat$SWB=="比较幸福"] <- 4
+UROP2018Dat$SWB[UROP2018Dat$SWB=="非常幸福"] <- 5
+UROP2018Dat$SWB[UROP2018Dat$SWB=="拒绝回答"] <- NA
+
+#gender: categorical variable to dummy/binary variable
+UROP2018Dat$gender[UROP2018Dat$gender=="女"] <- 0
+UROP2018Dat$gender[UROP2018Dat$gender=="男"] <- 1
+
+#character to numeric 
+UROP2018Dat$depressFrequency <- as.numeric(UROP2018Dat$depressFrequency)
+UROP2018Dat$SWB <- as.numeric(UROP2018Dat$SWB)
+UROP2018Dat$gender <- as.numeric(UROP2018Dat$gender)
+summary(UROP2018Dat)
+```
+
+3. Data Analysis
+```{r}
+# depressFrequency Table
+table(UROP2018Dat$depressFrequency)
+```
+
+```{r}
+# SWB Table
+table(UROP2018Dat$SWB)
+```
+
+```{r}
+# summary Age
+summary(UROP2018Dat$age)
+```
+
+H1: As people's age increases, their subjective well-being will increase. 
+```{r}
+# Linear Regression
+linearRegression2018_1 <- lm(SWB~age, data=UROP2018Dat)
+summary(linearRegression2018_1)
+```
+
+H2: As people's age increases, their frequency of having depressive mood will increase. 
+```{r}
+linearRegression2018_2 <- lm(depressFrequency~age, data=UROP2018Dat)
+summary(linearRegression2018_2)
+```
+
+H3: People who have higher SWB will have a smaller frequency of feeling depressed
+```{r}
+cor.test(UROP2018Dat$depressFrequency, UROP2018Dat$SWB)
+```
+
+4. Virtual Analysis
+
+H1: As people's age increases, their subjective well-being will increase. 
+
+Figure 1: Regression line of mean SWB by Age group
+```{r}
+library(ggplot2)
+meanSWBbyAge2018<- aggregate(as.numeric(UROP2018Dat$SWB), list(UROP2018Dat$age), FUN=mean, na.rm=T)
+
+ggplot(meanSWBbyAge2018, aes(Group.1, x)) + geom_point(color="orange") + xlab("Age") +ylab("Subjective Well-being Mean of the Age") +theme_classic() +ggtitle("2018 Chinese Adults' Subjective Well-being Mean by Age") + geom_smooth(method="lm", color="orange", se=FALSE)
+```
+
+H2: As people's age increases, their frequency of having depressive mood will increase. 
+
+Figure 2: Regression line of mean Depress Frequency by Age group
+```{r}
+meandepressFrequencybyAge2018<- aggregate(as.numeric(UROP2018Dat$depressFrequency), list(UROP2018Dat$age), FUN=mean, na.rm=T)
+
+ggplot(meandepressFrequencybyAge2018, aes(Group.1, x)) + geom_point(color="orange") + xlab("Age") +ylab("Depress Frequency Mean of the Age") +theme_classic() +ggtitle("2018 Chinese Young Adults' Depress Frequency Mean by Age") + geom_smooth(method="lm", color="orange", se=FALSE)
+```
+
+H3: People who have higher SWB will have a smaller frequency of feeling depressed
+
+Figure 3: Histogram of SWB
+```{r}
+ggplot(UROP2018Dat, aes(SWB)) + geom_histogram(color="orange", fill="yellow") + theme_classic() +ggtitle ("Histogram of 2018 Chinese Young Adults' SWB") 
+```
+
+Figure 4: Histogram of Frequency of Depressive Mood
+```{r}
+ggplot(UROP2018Dat, aes(depressFrequency)) + geom_histogram(color="orange", fill="yellow") + theme_classic() +ggtitle ("Histogram of 2018 Chinese Young Adults' Frequency of Depressive Mood") 
+```
